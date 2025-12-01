@@ -240,15 +240,6 @@ class _LoginPageState extends State<LoginPage> {
           _isError = false;
           _message = "Login successful!";
         });
-
-        await Future.delayed(const Duration(milliseconds: 700));
-        if (!mounted) return;
-        Navigator.pushReplacementNamed(context, '/assistant');
-      } else {
-        setState(() {
-          _isError = true;
-          _message = "Login failed: ${response.statusCode}";
-        });
       }
     } catch (e) {
       setState(() {
