@@ -109,7 +109,7 @@ class _TopNavState extends State<_TopNav> with SingleTickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Image.asset(
-                  'lib/assets/Logo_white.png',
+                  'lib/assets/images/Logo_white.png',
                   height: isMobile ? 45 : 50,
                 ).animate().fadeIn(duration: 400.ms).moveY(begin: -8, end: 0, curve: Curves.easeOut),
 
