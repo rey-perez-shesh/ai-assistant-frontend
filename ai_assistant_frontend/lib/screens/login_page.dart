@@ -203,53 +203,55 @@ class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    super.dispose();
-  }
-
-  // 🔥 NEW UPDATED BACKEND-CONNECTED SUBMIT FUNCTION
   void _submit() async {
-    final email = _emailController.text.trim();
+  if (!_formKey.currentState!.validate()) return;
 
-    if (email.isEmpty || !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+  final email = _emailController.text.trim();
+
+  setState(() {
+    _isLoading = true;
+    _message = null;
+    _isError = false;
+  });
+
+  try {
+    // 👉 Add your backend API URL here when ready
+    final uri = Uri.parse("https://your-backend-url.com/login");
+
+    final response = await http.post(
+      uri,
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode({"@": email}),
+    );
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200 && data["success"] == true) {
+      setState(() {
+        _isError = false;
+        _message = "Login success! Redirecting...";
+      });
+
+      // TODO: ENABLE ROUTE WHEN BACKEND IS READY TO RETURN TOKEN/STUDENT DATA
+      // Navigator.pushReplacementNamed(context, '/student-dashboard');
+
+    } else {
       setState(() {
         _isError = true;
-        _message = 'Please enter a valid email address.';
+        _message = data["message"] ?? "Login failed. Please try again.";
       });
-      return;
     }
-
+  } catch (e) {
+    // 👉 Shows message only — NO success, NO redirect
     setState(() {
-      _isLoading = true;
-      _message = null;
+      _isError = true;
+      _message = "Cannot connect to backend server.";
     });
-
-    try {
-      // ❗ Replace with your real backend URL
-      final uri = Uri.parse("http://your-server-ip:3000/login");
-
-      final response = await http.post(
-        uri,
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode({"email": email}),
-      );
-
-      if (response.statusCode == 200) {
-        setState(() {
-          _isError = false;
-          _message = "Login successful!";
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _isError = true;
-        _message = "Cannot connect to server. Backend may be offline.";
-      });
-    } finally {
-      setState(() => _isLoading = false);
-    }
+  } finally {
+    setState(() => _isLoading = false);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
