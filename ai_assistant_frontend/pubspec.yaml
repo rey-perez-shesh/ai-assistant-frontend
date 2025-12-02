@@ -65,6 +65,11 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/images/Logo_white.png
+    - assets/images/logo-header.png
+    - assets/images/sdca_logo_original.png
+
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
